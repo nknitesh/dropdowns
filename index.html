@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown by using javascript</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h1>Show a Date Control</h1>
+
+  <div>
+    <label>Select Date:</label>
+    <div class="input-icons">
+      <i class="fa fa-calendar icon"></i>
+      <input class="input-field" type="text"placeholder="Select date" id="selectedDateField" readonly/>
+    </div>
+
+    <div id="dateDropdownDiv">
+      <select id="yearDropdownField" onchange="onChangeYearAndMonth(this)"></select>
+      <select id="monthDropdownField" onchange="onChangeYearAndMonth(this)"></select>
+      <select id="dateDropdownField"></select>
+      <button onclick="onOkClick()">Ok</button>
+      <button onclick="onNowClick()">Now</button>
+    </div>
+  </div> 
+</body>
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+const yearDropdownField = $("#yearDropdownField");
+    const monthDropdownField = $("#monthDropdownField");
+    const dateDropdownField = $("#dateDropdownField");
+    const selectedDateField = $("#selectedDateField");
+
+    window.onload = function () {
+
+      populateYearDropdown();
+      populateMonthDropdown();
+      populateDateDropdown();
+
+      // Initially, we make hidden Date Dropdown Div.
+      $("#dateDropdownDiv").toggle();
+
+      // Add click event on selectedDateField and called toggle method on dateDropdownDiv
+      $("#selectedDateField").click(function () {
+        $("#dateDropdownDiv").toggle();
+      });
+    };
+
+    function populateYearDropdown() {
+
+      //Determine the Current Year.
+      const currentYear = new Date().getFullYear();
+
+      //Loop and add the Year values to DropDownList.
+      for (let i = currentYear; i >= 1950; i--) {
+        const option = document.createElement("OPTION");
+        option.innerHTML = i;
+        option.value = i;
+        yearDropdownField.append(option);
+      }
+    }
+
+    function populateMonthDropdown() {
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      //Loop and add the Year values to DropDownList.
+      for (let i = 0; i < monthNames.length; i++) {
+        const option = document.createElement("OPTION");
+        option.innerHTML = monthNames[i];
+        option.value = i;
+        monthDropdownField.append(option);
+      }
+    }
+
+    function populateDateDropdown() {
+      dateDropdownField.empty();
+      const year = yearDropdownField.val();
+      const month = parseInt(monthDropdownField.val()) + 1;
+
+      //get the last day, so the number of days in that month
+      const days = new Date(year, month, 0).getDate();
+
+      //lets create the days of that month
+      for (let d = 1; d <= days; d++) {
+        const option = document.createElement("OPTION");
+        option.innerHTML = d;
+        option.value = d;
+        dateDropdownField.append(option);
+      }
+    }
+
+    function onChangeYearAndMonth($event) {
+      this.populateDateDropdown();
+    }
+
+    function onOkClick() {
+      const y = yearDropdownField.val();
+      const m = monthDropdownField.val();
+      const d = dateDropdownField.val();
+
+      // make date object by passing year, month and date value
+      const date = new Date(y, m, d);
+
+      // set date object into readonly input field
+      selectedDateField.val(date.toLocaleDateString());
+
+      // after set date, hide date dropdown div
+      $("#dateDropdownDiv").hide();
+    }
+
+    function onNowClick() {
+      const date = new Date(); // get date object
+
+      // set values
+      yearDropdownField.val(date.getFullYear());
+      monthDropdownField.val(date.getMonth());
+      dateDropdownField.val(date.getDate());
+
+      // set date value into input field
+      selectedDateField.val(date.toLocaleDateString());
+      
+      // hide date dropdown div
+      $("#dateDropdownDiv").hide();
+    }
+</script>
+</html>
